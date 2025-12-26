@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products | Gokul Fabrics</title>
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- AOS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#0ab4a7;
+  --dark:#063f3b;
+  --shadow:0 18px 40px rgba(0,0,0,.12);
+  --hover-shadow:0 28px 60px rgba(0,0,0,.18);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Poppins',sans-serif;
+  background:#f6fffd;
+  color:#2b2b2b;
+}
+
+/* HEADER */
+.header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 24px;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+  cursor:pointer;
+}
+.logo{
+  width:40px;height:40px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),#067e75);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.brand{
+  font-weight:600;
+  font-size:18px;
+}
+
+/* PAGE */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 24px 80px;
+}
+h1{
+  color:var(--dark);
+  margin-bottom:30px;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:26px;
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+
+/* PRODUCT CARD */
+.product-card{
+  background:#fff;
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.product-card:hover{
+  transform:translateY(-12px) scale(1.02);
+  box-shadow:var(--hover-shadow);
+}
+.product-card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+}
+.product-card h3{
+  text-align:center;
+  padding:16px;
+  font-weight:500;
+}
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+.lightbox.active{display:flex}
+.lightbox img{
+  max-width:90%;
+  max-height:80%;
+  border-radius:14px;
+}
+.lightbox span{
+  position:absolute;
+  color:#fff;
+  font-size:32px;
+  cursor:pointer;
+  user-select:none;
+}
+.close{top:20px;right:30px}
+.prev{left:20px}
+.next{right:20px}
+
+/* WHATSAPP FLOAT */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25d366;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  color:#fff;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);
+  z-index:3000;
+  transition:transform .3s ease;
+}
+.whatsapp:hover{transform:scale(1.08)}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER (CLICK TO GO HOME) -->
+<div class="header" onclick="goHome()">
+  <div class="logo">GF</div>
+  <div class="brand">Gokul Fabrics</div>
+</div>
+
+<!-- CONTENT -->
+<div class="container">
+  <h1 id="pageTitle"></h1>
+  <div class="grid" id="productGrid"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <span class="close" onclick="closeBox()">✕</span>
+  <span class="prev" onclick="prevImg()">❮</span>
+  <img id="boxImg">
+  <span class="next" onclick="nextImg()">❯</span>
+</div>
+
+<!-- WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/919876543210" target="_blank">💬</a>
+
+<!-- AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({once:true,duration:700});</script>
+
+<script>
+/* ================= DATA ================= */
+const catalog = {
+  bedsheets: [
+   {
+    title: "Floral Cotton Bedsheet",
+    images: [
+      "https://c32db171.gokul-fabrics.pages.dev/col1a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col1b.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col1c.jpg"
+    ]
+  },
+  {
+    title: "Luxury Printed Bedsheet",
+    images: [
+      "https://c32db171.gokul-fabrics.pages.dev/col2b.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col2a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col2c.jpg"
+    ]
+  },
+  {
+    title: "Premium Designer Set",
+    images: [
+      "https://c32db171.gokul-fabrics.pages.dev/col4a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col4b.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col4c.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col4d.jpg"
+    ]
+  },
+  {
+    title: "Modern Pattern Bedsheet",
+    images: [
+     "https://c32db171.gokul-fabrics.pages.dev/col7b.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col7a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col7c.jpg"
+    ]
+  },
+  {
+    title: "Modern Pattern Bedsheet",
+    images: [
+      "https://c32db171.gokul-fabrics.pages.dev/col9a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col9b.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col9c.jpg"
+    ]
+  },
+   {
+    title: "Modern Pattern Bedsheet",
+    images: [
+      "https://c32db171.gokul-fabrics.pages.dev/col10b.jpg", 
+      "https://c32db171.gokul-fabrics.pages.dev/col10a.jpg",
+      "https://c32db171.gokul-fabrics.pages.dev/col10c.jpg"
+    ]
+  }
+
+
+  ],
+  curtains: [
+    { title:"Sheer White Curtains", images:[
+      "https://images.unsplash.com/photo-1615874959474-d609969a20ed",
+      "https://images.unsplash.com/photo-1615876234886-fd9a39fda97f",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511"
+    ]},
+    { title:"Luxury Drapes", images:[
+      "https://images.unsplash.com/photo-1505691723518-36a5ac3be353",
+      "https://images.unsplash.com/photo-1582582429416-2d9c9f1cb5dd",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea"
+    ]},
+    { title:"Printed Curtain Set", images:[
+      "https://images.unsplash.com/photo-1615874694520-474822394e73",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea",
+      "https://images.unsplash.com/photo-1598300053652-1bff2b3f3a8f"
+    ]}
+  ]
+};
+
+/* ================= LOGIC ================= */
+const params = new URLSearchParams(window.location.search);
+const category = params.get("category") || "bedsheets";
+const data = catalog[category];
+
+pageTitle.innerText = category.charAt(0).toUpperCase() + category.slice(1);
+
+data.forEach((item,index)=>{
+  const card=document.createElement("div");
+  card.className="product-card";
+  card.setAttribute("data-aos","fade-up");
+  card.innerHTML=`<img src="${item.images[0]}"><h3>${item.title}</h3>`;
+  card.onclick=()=>openBox(index);
+  productGrid.appendChild(card);
+});
+
+let curSet=0,curImg=0;
+function openBox(i){curSet=i;curImg=0;boxImg.src=data[curSet].images[curImg];lightbox.classList.add("active")}
+function closeBox(){lightbox.classList.remove("active")}
+function nextImg(){curImg=(curImg+1)%data[curSet].images.length;boxImg.src=data[curSet].images[curImg]}
+function prevImg(){curImg=(curImg-1+data[curSet].images.length)%data[curSet].images.length;boxImg.src=data[curSet].images[curImg]}
+
+function goHome(){
+  window.location.href="GokfabsIndex.html";
+}
+</script>
+
+</body>
+</html>
